@@ -2,7 +2,9 @@
   "name": "@social-network-nest/source",
   "version": "0.0.0",
   "license": "MIT",
-  "scripts": {},
+  "scripts": {
+    "prepare": "husky"
+  },
   "private": true,
   "dependencies": {
     "@nestjs-modules/ioredis": "^2.0.2",
@@ -48,10 +50,12 @@
     "@types/node": "20.19.9",
     "eslint": "^9.8.0",
     "eslint-config-prettier": "^10.0.0",
+    "husky": "^9.1.7",
     "jest": "^30.0.2",
     "jest-environment-node": "^30.0.2",
     "jest-util": "^30.0.2",
     "jsonc-eslint-parser": "^2.1.0",
+    "lint-staged": "^16.2.1",
     "nx": "21.5.3",
     "prettier": "^2.6.2",
     "ts-jest": "^29.4.0",
@@ -64,5 +68,14 @@
   },
   "nx": {
     "includedScripts": []
+  },
+  "lint-staged": {
+    "*.{ts,js}": [
+      "eslint --fix",
+      "nx format:write --uncommitted"
+    ],
+    "*.{json,md}": [
+      "nx format:write --uncommitted"
+    ]
   }
 }

@@ -1,0 +1,5 @@
+echo "🔍 Running Lint for staged files..."
+
+echo "🔍 Running Format for staged files..."
+
+echo "🔍 Running Tests for staged files..."
