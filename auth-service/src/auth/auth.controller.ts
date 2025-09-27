@@ -3,7 +3,7 @@ import { AuthService } from './auth.service';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 import { loginDto, refreshTokenDto, registerDto } from '@social-network/shared';
 
-@Controller('auth')
+@Controller()
 export class AuthController {
     constructor (private readonly authService: AuthService) {}
 
