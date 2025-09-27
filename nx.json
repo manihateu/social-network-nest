@@ -39,7 +39,7 @@
       "options": {
         "targetName": "test"
       },
-      "exclude": ["apps/social-network-nest-e2e/**/*"]
+      "exclude": ["apps/social-network-nest-e2e/**/*", "auth-service-e2e/**/*"]
     }
   ]
 }
