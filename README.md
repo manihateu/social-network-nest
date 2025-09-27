@@ -10,6 +10,10 @@
 
 [Click here to finish setting up your workspace!](https://cloud.nx.app/connect/XGMoB6l21Q)
 
+## Create lib
+```nx g @nx/nest:lib <lib_name> --publishable --importPath=<import_path>```
+## Create app
+```nx g @nx/nest:app <app_name>```
 
 ## Run tasks
 
