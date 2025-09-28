@@ -5,6 +5,7 @@ import { CreatePostCommand } from './commands/impl/create-post.command';
 import { CreatePostDto, GetMyPostsDto, UpdatePostDto } from '@social-network/shared';
 import { GetMyPostsQuery } from './queries/impl/get-my-posts.query';
 import { UpdatePostCommand } from './commands/impl/update-post.command';
+import { GetPostByIdQuery } from './queries/impl/get-by-id.query';
 
 @Controller()
 export class PostsController {
@@ -28,5 +29,10 @@ export class PostsController {
     @MessagePattern({ cmd: 'update-post' })
     async updatePost(@Payload() data: UpdatePostDto) {
         return this.queryBus.execute(new UpdatePostCommand(data.postId, data.userId, data.content, data.files));
+    }
+
+    @MessagePattern({ cmd: 'by-id' })
+    async getPostById(@Payload() data: Pick<UpdatePostDto, "postId">) {
+        return this.queryBus.execute(new GetPostByIdQuery(data.postId));
     }
 }

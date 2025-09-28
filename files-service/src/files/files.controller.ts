@@ -7,10 +7,10 @@ import { FileInterceptor } from '@nestjs/platform-express';
 export class FileController {
   constructor(private readonly fileService: FileService) {}
 
-  @MessagePattern({ cmd: 'upload-file' })
-  @UseInterceptors(FileInterceptor('file'))
-  async uploadFile(@UploadedFile() file) {
-    return this.fileService.uploadFile(file);
+  @MessagePattern({ cmd: 'upload-files' })
+  @UseInterceptors(FileInterceptor('files'))
+  async uploadFile(@UploadedFile() files) {
+    return this.fileService.uploadFiles(files);
   }
 
   @MessagePattern({ cmd: 'delete-file' })

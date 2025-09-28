@@ -5,7 +5,10 @@ export const CurrentUser = createParamDecorator(
     const request = ctx.switchToHttp().getRequest();
     const user = request.user;
 
-    // если указать поле: @CurrentUser('email') → вернётся только email
     return data ? user?.[data] : user;
   },
 );
+
+export type UserFromReq = {
+    userId: string
+}

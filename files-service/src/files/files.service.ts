@@ -37,6 +37,15 @@ export class FileService {
     };
   }
 
+  async uploadFiles(files) {
+    const results = [];
+    for (const file of files) {
+      const uploaded = await this.uploadFile(file);
+      results.push(uploaded);
+    }
+    return results; // массив {url, key}
+  }
+
   async deleteFile(key: string) {
     await this.s3.send(
       new DeleteObjectCommand({
