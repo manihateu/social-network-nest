@@ -48,6 +48,7 @@
     "@swc/helpers": "~0.5.11",
     "@types/jest": "^30.0.0",
     "@types/node": "20.19.9",
+    "@types/passport-jwt": "^4.0.1",
     "eslint": "^9.8.0",
     "eslint-config-prettier": "^10.0.0",
     "husky": "^9.1.7",
