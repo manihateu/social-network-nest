@@ -7,17 +7,17 @@ import { loginDto, refreshTokenDto, registerDto } from '@social-network/shared';
 export class AuthController {
     constructor (private readonly authService: AuthService) {}
 
-    @MessagePattern("register")
+    @MessagePattern({ cmd: "register" })
     async register(@Payload() dto: registerDto) {
         return this.authService.register(dto)
     }
 
-    @MessagePattern("login")
+    @MessagePattern({ cmd: "login" })
     async login(@Payload() dto: loginDto) {
         return this.authService.login(dto)
     }
 
-    @MessagePattern("refresh")
+    @MessagePattern({ cmd: "refresh" })
     async refresh(@Payload() dto: refreshTokenDto) {
         return this.authService.refreshToken(dto.userId, dto.token)
     }
