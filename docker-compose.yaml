@@ -94,9 +94,8 @@ services:
       - redis
     environment:
       PORT: 3000
-      RABBITMQ_URL: amqp://rabbitmq:5672
-      REDIS_HOST: redis
-      REDIS_PORT: 6379
+      RMQ_URL: amqp://rabbitmq:5672
+      REDIS_URL: redis://redis:6379/
       JWT_SECRET: super_secret_key
       CENTRIFUGO_SECRET: centrifugo-secret
       CENTRIFUGO_API_URL: http://centrifugo:8000/api
@@ -115,9 +114,8 @@ services:
       - redis
     environment:
       DATABASE_URL: postgres://user:password@postgres-auth:5432/auth_db
-      RABBITMQ_URL: amqp://rabbitmq:5672
-      REDIS_HOST: redis
-      REDIS_PORT: 6379
+      RMQ_URL: amqp://rabbitmq:5672
+      REDIS_URL: redis://redis:6379/
       JWT_SECRET: super_secret_key
 
   posts-service:
@@ -131,7 +129,7 @@ services:
       - minio
     environment:
       DATABASE_URL: postgres://user:password@postgres-posts:5432/posts_db
-      RABBITMQ_URL: amqp://rabbitmq:5672
+      RMQ_URL: amqp://rabbitmq:5672
       MINIO_URL: http://minio:9000
       MINIO_BUCKET: social-bucket
       MINIO_ACCESS_KEY: admin
@@ -148,7 +146,7 @@ services:
       - centrifugo
     environment:
       DATABASE_URL: postgres://user:password@postgres-chat:5432/chat_db
-      RABBITMQ_URL: amqp://rabbitmq:5672
+      RMQ_URL: amqp://rabbitmq:5672
       CENTRIFUGO_API_URL: http://centrifugo:8000/api
       CENTRIFUGO_API_KEY: api-key-example
 
@@ -161,7 +159,7 @@ services:
       - minio
       - rabbitmq
     environment:
-      RABBITMQ_URL: amqp://rabbitmq:5672
+      RMQ_URL: amqp://rabbitmq:5672
       MINIO_URL: http://minio:9000
       MINIO_BUCKET: social-bucket
       MINIO_ACCESS_KEY: admin
