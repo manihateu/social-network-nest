@@ -1,0 +1,168 @@
+version: "3.9"
+services:
+  # ========== DATABASES ==========
+  postgres-auth:
+    image: postgres:15
+    container_name: postgres-auth
+    restart: always
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: auth_db
+    ports:
+      - "5433:5432"
+    volumes:
+      - ./data/postgres-auth:/var/lib/postgresql/data
+
+  postgres-posts:
+    image: postgres:15
+    container_name: postgres-posts
+    restart: always
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: posts_db
+    ports:
+      - "5434:5432"
+    volumes:
+      - ./data/postgres-posts:/var/lib/postgresql/data
+
+  postgres-chat:
+    image: postgres:15
+    container_name: postgres-chat
+    restart: always
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: chat_db
+    ports:
+      - "5435:5432"
+    volumes:
+      - ./data/postgres-chat:/var/lib/postgresql/data
+
+  # ========== REDIS ==========
+  redis:
+    image: redis:7
+    container_name: redis
+    restart: always
+    ports:
+      - "6379:6379"
+
+  # ========== RABBITMQ ==========
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    restart: always
+    ports:
+      - "5672:5672"
+      - "15672:15672" # панель управления
+
+  # ========== MINIO ==========
+  minio:
+    image: minio/minio
+    container_name: minio
+    command: server /data --console-address ":9001"
+    restart: always
+    environment:
+      MINIO_ROOT_USER: admin
+      MINIO_ROOT_PASSWORD: admin123
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - ./data/minio:/data
+
+  # ========== CENTRIFUGO ==========
+  centrifugo:
+    image: centrifugo/centrifugo:v5
+    container_name: centrifugo
+    restart: always
+    command: centrifugo --config=/centrifugo/config.json
+    volumes:
+      - ./centrifugo/config.json:/centrifugo/config.json
+    ports:
+      - "8000:8000"
+
+  # ========== SERVICES ==========
+  api-gateway:
+    build:
+      context: .
+      dockerfile: ./apps/api-gateway/Dockerfile
+    container_name: api-gateway
+    depends_on:
+      - rabbitmq
+      - redis
+    environment:
+      PORT: 3000
+      RABBITMQ_URL: amqp://rabbitmq:5672
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      JWT_SECRET: super_secret_key
+      CENTRIFUGO_SECRET: centrifugo-secret
+      CENTRIFUGO_API_URL: http://centrifugo:8000/api
+      CENTRIFUGO_API_KEY: api-key-example
+    ports:
+      - "3000:3000"
+
+  auth-service:
+    build:
+      context: .
+      dockerfile: ./apps/auth-service/Dockerfile
+    container_name: auth-service
+    depends_on:
+      - postgres-auth
+      - rabbitmq
+      - redis
+    environment:
+      DATABASE_URL: postgres://user:password@postgres-auth:5432/auth_db
+      RABBITMQ_URL: amqp://rabbitmq:5672
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      JWT_SECRET: super_secret_key
+
+  posts-service:
+    build:
+      context: .
+      dockerfile: ./apps/posts-service/Dockerfile
+    container_name: posts-service
+    depends_on:
+      - postgres-posts
+      - rabbitmq
+      - minio
+    environment:
+      DATABASE_URL: postgres://user:password@postgres-posts:5432/posts_db
+      RABBITMQ_URL: amqp://rabbitmq:5672
+      MINIO_URL: http://minio:9000
+      MINIO_BUCKET: social-bucket
+      MINIO_ACCESS_KEY: admin
+      MINIO_SECRET_KEY: admin123
+
+  chat-service:
+    build:
+      context: .
+      dockerfile: ./apps/chat-service/Dockerfile
+    container_name: chat-service
+    depends_on:
+      - postgres-chat
+      - rabbitmq
+      - centrifugo
+    environment:
+      DATABASE_URL: postgres://user:password@postgres-chat:5432/chat_db
+      RABBITMQ_URL: amqp://rabbitmq:5672
+      CENTRIFUGO_API_URL: http://centrifugo:8000/api
+      CENTRIFUGO_API_KEY: api-key-example
+
+  files-service:
+    build:
+      context: .
+      dockerfile: ./apps/files-service/Dockerfile
+    container_name: files-service
+    depends_on:
+      - minio
+      - rabbitmq
+    environment:
+      RABBITMQ_URL: amqp://rabbitmq:5672
+      MINIO_URL: http://minio:9000
+      MINIO_BUCKET: social-bucket
+      MINIO_ACCESS_KEY: admin
+      MINIO_SECRET_KEY: admin123

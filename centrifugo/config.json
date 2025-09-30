@@ -1,0 +1,7 @@
+{
+  "v3_use_offset": true,
+  "token_hmac_secret_key": "centrifugo-secret",
+  "admin": true,
+  "api_key": "api-key-example",
+  "allowed_origins": ["*"]
+}

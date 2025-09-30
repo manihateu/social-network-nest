@@ -44,7 +44,8 @@
         "auth-service-e2e/**/*",
         "api-gateway-e2e/**/*",
         "posts-service-e2e/**/*",
-        "files-service-e2e/**/*"
+        "files-service-e2e/**/*",
+        "apps/chat-service-e2e/**/*"
       ]
     }
   ],
