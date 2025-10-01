@@ -87,7 +87,7 @@ services:
   api-gateway:
     build:
       context: .
-      dockerfile: ./apps/api-gateway/Dockerfile
+      dockerfile: ./Dockerfile.gateway
     container_name: api-gateway
     depends_on:
       - rabbitmq
@@ -106,7 +106,7 @@ services:
   auth-service:
     build:
       context: .
-      dockerfile: ./apps/auth-service/Dockerfile
+      dockerfile: ./Dockerfile.auth
     container_name: auth-service
     depends_on:
       - postgres-auth
@@ -121,7 +121,7 @@ services:
   posts-service:
     build:
       context: .
-      dockerfile: ./apps/posts-service/Dockerfile
+      dockerfile: ./Dockerfile.posts
     container_name: posts-service
     depends_on:
       - postgres-posts
@@ -138,7 +138,7 @@ services:
   chat-service:
     build:
       context: .
-      dockerfile: ./apps/chat-service/Dockerfile
+      dockerfile: ./Dockerfile.chat
     container_name: chat-service
     depends_on:
       - postgres-chat
@@ -153,7 +153,7 @@ services:
   files-service:
     build:
       context: .
-      dockerfile: ./apps/files-service/Dockerfile
+      dockerfile: ./Dockerfile.files
     container_name: files-service
     depends_on:
       - minio

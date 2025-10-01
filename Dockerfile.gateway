@@ -1,0 +1,27 @@
+# --- Builder ---
+FROM node:20-alpine AS builder
+
+WORKDIR /app
+
+# копируем всё из корня, т.к. nx и libs нужны
+COPY . .
+
+RUN npm install -g pnpm
+RUN pnpm install --frozen-lockfile
+
+# билдим только нужный сервис через nx
+RUN pnpm nx build api-gateway
+
+# --- Runner ---
+FROM node:20-alpine
+
+WORKDIR /app
+
+RUN npm install -g pnpm
+COPY package.json pnpm-lock.yaml ./
+RUN pnpm install --prod --frozen-lockfile
+
+# копируем билд
+COPY --from=builder /app/dist/apps/api-gateway ./dist
+
+CMD ["node", "dist/main.js"]
